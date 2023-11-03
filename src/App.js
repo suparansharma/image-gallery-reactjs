@@ -1,81 +1,66 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
-import image1 from './images/image-1.webp';
-import image2 from './images/image-2.webp';
-import image3 from './images/image-3.webp';
+import { getImages } from './api';
 
 function App() {
-  const [option1, setOption1] = useState(false);
-  const [option2, setOption2] = useState(false);
-  const [option3, setOption3] = useState(false);
+  const [images, setImages] = useState([]);
+  const [checkboxValues, setCheckboxValues] = useState({});
+  const [selectedImages, setSelectedImages] = useState([]);
+  console.log("checkboxValues", checkboxValues);
+  console.log("selectedImages", selectedImages);
 
-  const handleCheckboxChange = (event) => {
-    const { name, checked } = event.target;
+  useEffect(() => {
+    getImages().then((data) => {
+      setImages(data);
 
-    if (name === 'option1') {
-      setOption1(checked);
-    } else if (name === 'option2') {
-      setOption2(checked);
-    } else if (name === 'option3') {
-      setOption3(checked);
+      // Initialize checkbox values with only IDs
+      const initialIds = data.map((item) => item.id);
+      const initialValues = initialIds.reduce((acc, id) => {
+        acc[id] = false;
+        return acc;
+      }, {});
+      setCheckboxValues(initialValues);
+    });
+  }, []);
+
+
+
+  const handleCheckboxChange = (event, name) => {
+    const { checked } = event.target;
+    setCheckboxValues((prevValues) => ({
+      ...prevValues,
+      [name]: checked,
+    }));
+
+    if (checked) {
+      setSelectedImages((prevSelected) => [...prevSelected, name]);
+    } else {
+      setSelectedImages((prevSelected) => prevSelected.filter((item) => item !== name));
     }
   };
 
   return (
-    <>
-    
     <div className="container">
       <div className="row">
-        <div className="col-4">
-          <div className="card card-hover">
-            <div className="position-relative">
-              <input
-                className="form-check-input position-absolute top-0 start-0 m-3"
-                type="checkbox"
-                id="inlineCheckbox1"
-                name="option1"
-                checked={option1}
-                onChange={(event) => handleCheckboxChange(event, 'option1')}
-              />
+        {images.map((image) => (
+          <div className="col-4" key={image.id}>
+            <div className="card card-hover">
+              <div className="position-relative">
+                <input
+                  className="form-check-input position-absolute top-0 start-0 m-3"
+                  type="checkbox"
+                  id={`inlineCheckbox${image.id}`}
+                  name={image.id}
+                  checked={checkboxValues[image.id]}
+                  onChange={(event) => handleCheckboxChange(event, image.id)}
+                />
+              </div>
+              <img src={process.env.PUBLIC_URL + `/images/${image.image}`} alt={image.name} className="card-img-top" />
             </div>
-            <img src={image1} alt="1" className="card-img-top" />
           </div>
-        </div>
-
-        <div className="col-4">
-          <div className="card card-hover">
-            <div className="position-relative">
-              <input
-                className="form-check-input position-absolute top-0 start-0 m-3"
-                type="checkbox"
-                id="inlineCheckbox2"
-                name="option2"
-                checked={option2}
-                onChange={(event) => handleCheckboxChange(event, 'option2')}
-              />
-            </div>
-            <img src={image2} alt="2" className="card-img-top" />
-          </div>
-        </div>
-
-        <div className="col-4">
-          <div className="card card-hover">
-            <div className="position-relative">
-              <input
-                className="form-check-input position-absolute top-0 start-0 m-3"
-                type="checkbox"
-                id="inlineCheckbox3"
-                name="option3"
-                checked={option3}
-                onChange={(event) => handleCheckboxChange(event, 'option3')}
-              />
-            </div>
-            <img src={image3} alt="3" className="card-img-top" />
-          </div>
-        </div>
+        ))}
       </div>
     </div>
-    </>
   );
 }
 
