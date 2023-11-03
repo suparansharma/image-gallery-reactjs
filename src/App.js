@@ -12,8 +12,6 @@ function App() {
   useEffect(() => {
     getImages().then((data) => {
       setImages(data);
-
-      // Initialize checkbox values with only IDs
       const initialIds = data.map((item) => item.id);
       const initialValues = initialIds.reduce((acc, id) => {
         acc[id] = false;
@@ -40,14 +38,9 @@ function App() {
   };
 
   const handleDelete = () => {
-    // Filter out the selected images from the images state
     const updatedImages = images.filter((image) => !selectedImages.includes(image.id));
-  
-    // Update the images state and clear the selectedImages state
     setImages(updatedImages);
     setSelectedImages([]);
-  
-    // You can also update the checkboxValues state to reset the checkboxes
     const updatedCheckboxValues = { ...checkboxValues };
     selectedImages.forEach((id) => {
       updatedCheckboxValues[id] = false;
@@ -56,28 +49,32 @@ function App() {
   };
 
   return (
-    <div className="container">
-      <button onClick={handleDelete}>Delete Selected Images</button>
-      <div className="row">
-        {images.map((image) => (
-          <div className="col-4" key={image.id}>
-            <div className="card card-hover">
-              <div className="position-relative">
-                <input
-                  className="form-check-input position-absolute top-0 start-0 m-3"
-                  type="checkbox"
-                  id={`inlineCheckbox${image.id}`}
-                  name={image.id}
-                  checked={checkboxValues[image.id]}
-                  onChange={(event) => handleCheckboxChange(event, image.id)}
-                />
-              </div>
-              <img src={process.env.PUBLIC_URL + `/images/${image.image}`} alt={image.name} className="card-img-top" />
-            </div>
+<div className="container">
+  <button onClick={handleDelete}>Delete Selected Images</button>
+  <p>Selected Images Count: {selectedImages.length}</p>
+  <div className="row">
+    {images.map((image) => (
+      <div className="col-4 custom-column" key={image.id}> 
+        <div className="card card-hover custom-card">
+          <div className="position-relative">
+            <input
+              className="form-check-input position-absolute top-0 start-0 m-3"
+              type="checkbox"
+              id={`inlineCheckbox${image.id}`}
+              name={image.id}
+              checked={checkboxValues[image.id]}
+              onChange={(event) => handleCheckboxChange(event, image.id)}
+            />
           </div>
-        ))}
+          <img src={process.env.PUBLIC_URL + `/images/${image.image}`} alt={image.name} className="card-img-top" />
+        </div>
       </div>
-    </div>
+    ))}
+  </div>
+</div>
+
+
+
   );
 }
 
