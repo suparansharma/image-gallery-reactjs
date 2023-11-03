@@ -5,9 +5,9 @@ import { getImages } from './api';
 function App() {
   const [images, setImages] = useState([]);
   const [checkboxValues, setCheckboxValues] = useState({});
-  const [selectedImages, setSelectedImages] = useState([]);
-  console.log("checkboxValues", checkboxValues);
-  console.log("selectedImages", selectedImages);
+  const[selectedImages,setSelectedImages]= useState([]);
+  console.log("checkboxValues",checkboxValues);
+  console.log("selectedImages",selectedImages);
 
   useEffect(() => {
     getImages().then((data) => {
@@ -39,8 +39,25 @@ function App() {
     }
   };
 
+  const handleDelete = () => {
+    // Filter out the selected images from the images state
+    const updatedImages = images.filter((image) => !selectedImages.includes(image.id));
+  
+    // Update the images state and clear the selectedImages state
+    setImages(updatedImages);
+    setSelectedImages([]);
+  
+    // You can also update the checkboxValues state to reset the checkboxes
+    const updatedCheckboxValues = { ...checkboxValues };
+    selectedImages.forEach((id) => {
+      updatedCheckboxValues[id] = false;
+    });
+    setCheckboxValues(updatedCheckboxValues);
+  };
+
   return (
     <div className="container">
+      <button onClick={handleDelete}>Delete Selected Images</button>
       <div className="row">
         {images.map((image) => (
           <div className="col-4" key={image.id}>
