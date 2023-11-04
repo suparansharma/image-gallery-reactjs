@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import { getImages } from './api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faImage } from '@fortawesome/free-regular-svg-icons';
 import { faImage, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 
@@ -107,7 +106,7 @@ function App() {
       <div className="card">
         <h5 className="card-header">
           <div className="d-flex justify-content-between align-items-center">
-            {selectedImages.length > 0 && (
+            {selectedImages.length > 0 ? (
               <div>
                 <input
                   className="form-check-input"
@@ -118,22 +117,25 @@ function App() {
                 />
                 {selectedImages.length} Files Selected
               </div>
+            ) : (
+
+              <h6 > Gallery</h6>
             )}
             {selectedImages.length > 0 && (
-              // <button onClick={handleDelete} className="btn btn-danger">
-              //   Delete Selected Images
-              // </button>
+
 
               <h6 className="text-danger" onClick={handleDelete}> Delete files</h6>
             )}
           </div>
         </h5>
-        {isLoading ? ( // Display loading icon while isLoading is true
+        {isLoading ? (
           <div className="loading-icon">
             <FontAwesomeIcon icon={faSpinner} spin size="3x" />
 
           </div>
         ) : (
+
+          <div className="container">
 
           <div className="custom-grid">
 
@@ -145,43 +147,39 @@ function App() {
                 draggable
                 onDragStart={(e) => handleDragStart(e, image)}
                 onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, image)}
-              >
-                <div
-                  className="card card-hover custom-card hover12"
+                onDrop={(e) => handleDrop(e, image)}>
+
+                <div className="card"
                   onClick={(e) => handleToggle(e, image.id)}
                   style={{
-                    opacity: checkboxValues[image.id] ? 0.3 : 1, // Set opacity to 1 for checked, 0.3 for unchecked
-                  }}
-                >
-                  <div className="position-relative">
-                    <input
-                      className="form-check-input position-absolute top-0 start-0 m-3"
-                      type="checkbox"
-                      id={`inlineCheckbox${image.id}`}
-                      name={image.id}
-                      checked={checkboxValues[image.id]}
-                      onChange={(event) => handleToggle(event, image.id)}
-                      onClick={(event) => event.stopPropagation()}
-                    />
+                    opacity: checkboxValues[image.id] ? 0.5 : 1,
+                  }}>
+                  <div className='card-item'>
+                    <div className="">
+                      <input
+                        className="form-check-input position-absolute top-0 start-0 m-3"
+                        type="checkbox"
+                        id={`inlineCheckbox${image.id}`}
+                        name={image.id}
+                        checked={checkboxValues[image.id]}
+                        onChange={(event) => handleToggle(event, image.id)}
+                        onClick={(event) => event.stopPropagation()}
+                      />
+                    </div>
+                    <figure className='image-container'>
+                      <img
+                        className="card-img-top"
+                        src={process.env.PUBLIC_URL + `/images/${image.image}`}
+                        alt={image.name}
+                      />
+                      <div className="overlay">
+                      </div>
+                    </figure>
                   </div>
-                  <figure>
-                    <img
-                      src={process.env.PUBLIC_URL + `/images/${image.image}`}
-                      alt={image.name}
-                      className="card-img-top"
-                    />
-                  </figure>
                 </div>
               </div>
             ))}
 
-
-
-
-
-
-            {/* Place the FontAwesomeIcon within the custom-grid as the last item */}
             <div className="custom-item">
               <figure className="custom-card-container">
                 <div className="custom-card hover12 custom-card-content">
@@ -196,6 +194,7 @@ function App() {
 
 
 
+          </div>
           </div>
         )}
 

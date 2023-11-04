@@ -6,6 +6,6 @@ export const getImages = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(imageData);
-    }, 1000); // Simulate a 1-second delay (you can adjust this as needed).
+    },); // Simulate a 1-second delay (you can adjust this as needed).
   });
 };
