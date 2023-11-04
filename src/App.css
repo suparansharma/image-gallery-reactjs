@@ -28,3 +28,43 @@
   grid-column: span 2;
   grid-row: span 2;
 }
+
+.hover12 figure img {
+	opacity: 1;
+	-webkit-transition: .3s ease-in-out;
+	transition: .3s ease-in-out;
+}
+.hover12 figure:hover img {
+	opacity: .3;
+}
+
+
+
+
+
+
+
+/* styles.css or your custom CSS file */
+.custom-card-container {
+  border: 2px dashed black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 250px;
+}
+
+.custom-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+.loading-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Adjust this as needed to center vertically */
+}
+
