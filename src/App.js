@@ -1,14 +1,16 @@
 import { useState, useEffect } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import './App.css';
 import { getImages } from './api';
 
 function App() {
   const [images, setImages] = useState([]);
+
   const [checkboxValues, setCheckboxValues] = useState({});
   const [selectedImages, setSelectedImages] = useState([]);
-  console.log("checkboxValues", checkboxValues);
-  console.log("selectedImages", selectedImages);
+  const [draggedImage, setDraggedImage] = useState(null);
+
+  console.log(checkboxValues);
+
 
   useEffect(() => {
     getImages().then((data) => {
@@ -21,8 +23,6 @@ function App() {
       setCheckboxValues(initialValues);
     });
   }, []);
-
-
 
   const handleCheckboxChange = (event, name) => {
     const { checked } = event.target;
@@ -38,6 +38,8 @@ function App() {
     }
   };
 
+
+
   const handleDelete = () => {
     const updatedImages = images.filter((image) => !selectedImages.includes(image.id));
     setImages(updatedImages);
@@ -49,56 +51,98 @@ function App() {
     setCheckboxValues(updatedCheckboxValues);
   };
 
-  function handleOnDragEnd(result) {
-    if (!result.destination) return;
 
-    const items = Array.from(images);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
+  const handleDragStart = (event, image) => {
+    event.dataTransfer.setData('text/plain', image.id);
+    setDraggedImage(image);
+  };
 
-    setImages(items);
-  }
+  const handleDragOver = (event) => {
+    event.preventDefault();
+  };
+
+  const handleDrop = (event, targetImage) => {
+    event.preventDefault();
+
+    // Swap the positions of the draggedImage and targetImage
+    const updatedImages = images.map((image) => {
+      if (image.id === targetImage.id) {
+        return draggedImage;
+      }
+      if (image.id === draggedImage.id) {
+        return targetImage;
+      }
+      return image;
+    });
+
+    setImages(updatedImages);
+    setDraggedImage(null);
+  };
+
+
+
+   const handleToggle = (event, imageId) => {
+    if (event.target.type === 'checkbox') {
+      // If it's a checkbox, update the checkboxValues state
+      const isChecked = event.target.checked;
+      setCheckboxValues((prevCheckboxValues) => ({
+        ...prevCheckboxValues,
+        [imageId]: isChecked,
+      }));
+
+      // Update the selectedImages state based on checkbox state
+      if (isChecked) {
+        setSelectedImages((prevSelectedImages) => [...prevSelectedImages, imageId]);
+      } else {
+        setSelectedImages((prevSelectedImages) => prevSelectedImages.filter(id => id !== imageId));
+      }
+    } else {
+      // If it's a card click, simulate a click on the associated checkbox
+      const checkbox = document.getElementById(`inlineCheckbox${imageId}`);
+      if (checkbox) {
+        checkbox.click();
+      }
+    }
+  };
 
   return (
     <div className="container">
-      <button onClick={handleDelete}>Delete Selected Images</button>
-      <p>Selected Images Count: {selectedImages.length}</p>
-
-      <DragDropContext onDragEnd={handleOnDragEnd}>
-        <Droppable droppableId="characters">
-          {(provided) => (
-            <div className="row">
-              {images.map(({ image, id, name }, index) => (
-                <Draggable key={id} draggableId={id} index={index}>
-                  {(provided) => (
-                    <div className="col-4 custom-column" key={id}>
-                      <div className="card card-hover custom-card">
-                        <div className="position-relative">
-                          <input
-                            className="form-check-input position-absolute top-0 start-0 m-3"
-                            type="checkbox"
-                            id={`inlineCheckbox${id}`}
-                            name={image.id}
-                            checked={checkboxValues[id]}
-                            onChange={(event) => handleCheckboxChange(event, id)}
-                          />
-                        </div>
-                        <img src={process.env.PUBLIC_URL + `/images/${image}`} alt={name} className="card-img-top" />
-                      </div>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-
+    <button onClick={handleDelete}>Delete Selected Images</button>
+    <p>Selected Images Count: {selectedImages.length}</p>
+    <p>Drag and drop to reorder images</p>
+    <div className="row">
+      {images.map((image) => (
+        <div
+          className="col-4 custom-column"
+          key={image.id}
+          draggable
+          onDragStart={(e) => handleDragStart(e, image)}
+          onDragOver={handleDragOver}
+          onDrop={(e) => handleDrop(e, image)}
+        >
+          <div className="card card-hover custom-card" onClick={(e) => handleToggle(e, image.id)}>
+            <div className="position-relative">
+              <input
+                className="form-check-input position-absolute top-0 start-0 m-3"
+                type="checkbox"
+                id={`inlineCheckbox${image.id}`}
+                name={image.id}
+                checked={checkboxValues[image.id]}
+                onChange={(event) => handleToggle(event, image.id)}
+                onClick={(event) => event.stopPropagation()}
+              />
             </div>
-
-          )}
-        </Droppable>
-      </DragDropContext>
+            <img
+              src={process.env.PUBLIC_URL + `/images/${image.image}`}
+              alt={image.name}
+              className="card-img-top"
+            />
+          </div>
+        </div>
+      ))}
     </div>
-
-
-
+  </div>
+  
   );
 }
 
