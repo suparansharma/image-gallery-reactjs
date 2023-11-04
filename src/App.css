@@ -1,26 +1,30 @@
-
-/* App.css */
-.card-hover:hover {
-  box-shadow: 0 0 10px 5px rgba(0, 0, 0, 0.9); /* Dark black shadow on hover */
-  cursor: pointer; /* Change cursor on hover */
-  transition: box-shadow 0.3s;
+/* Default grid layout for screens wider than 768px */
+.custom-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* Default: 5 columns */
+  grid-template-rows: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 16px;
 }
 
-
-/* Define a custom card size */
-.custom-card {
-  width: 300px; /* Set your desired width */
-  height: 400px; /* Set your desired height */
-  /* Add any other CSS properties you want for customization */
+/* Grid layout for screens up to 768px (4 columns) */
+@media (max-width: 768px) {
+  .custom-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
-
-
-/* Reduce the gap between columns */
-.custom-column {
-  margin: 0; /* Remove the default column margin */
-  padding: 0; /* Remove any padding, if necessary */
+/* Grid layout for screens up to 576px (3 columns) */
+@media (max-width: 576px) {
+  .custom-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
 
+.custom-item {
+  /* Add any additional styling for grid items here */
+}
 
-
+.first-item {
+  grid-column: span 2;
+  grid-row: span 2;
+}

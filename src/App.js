@@ -24,20 +24,6 @@ function App() {
     });
   }, []);
 
-  const handleCheckboxChange = (event, name) => {
-    const { checked } = event.target;
-    setCheckboxValues((prevValues) => ({
-      ...prevValues,
-      [name]: checked,
-    }));
-
-    if (checked) {
-      setSelectedImages((prevSelected) => [...prevSelected, name]);
-    } else {
-      setSelectedImages((prevSelected) => prevSelected.filter((item) => item !== name));
-    }
-  };
-
 
 
   const handleDelete = () => {
@@ -81,7 +67,7 @@ function App() {
 
 
 
-   const handleToggle = (event, imageId) => {
+  const handleToggle = (event, imageId) => {
     if (event.target.type === 'checkbox') {
       // If it's a checkbox, update the checkboxValues state
       const isChecked = event.target.checked;
@@ -107,43 +93,64 @@ function App() {
 
   return (
     <div className="container">
-    <button onClick={handleDelete}>Delete Selected Images</button>
-    <p>Selected Images Count: {selectedImages.length}</p>
-    <p>Drag and drop to reorder images</p>
-    <div className="row">
-      {images.map((image) => (
-        <div
-          className="col-4 custom-column"
-          key={image.id}
-          draggable
-          onDragStart={(e) => handleDragStart(e, image)}
-          onDragOver={handleDragOver}
-          onDrop={(e) => handleDrop(e, image)}
-        >
-          <div className="card card-hover custom-card" onClick={(e) => handleToggle(e, image.id)}>
-            <div className="position-relative">
-              <input
-                className="form-check-input position-absolute top-0 start-0 m-3"
-                type="checkbox"
-                id={`inlineCheckbox${image.id}`}
-                name={image.id}
-                checked={checkboxValues[image.id]}
-                onChange={(event) => handleToggle(event, image.id)}
-                onClick={(event) => event.stopPropagation()}
-              />
-            </div>
-            <img
-              src={process.env.PUBLIC_URL + `/images/${image.image}`}
-              alt={image.name}
-              className="card-img-top"
-            />
+      <div className="card">
+        <h5 className="card-header">
+          <div className="d-flex justify-content-between align-items-center">
+            {selectedImages.length > 0 && (
+              <div>
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="flexCheckChecked"
+                  checked
+                />
+                {selectedImages.length} Files Selected
+              </div>
+            )}
+            {selectedImages.length > 0 && (
+              <button onClick={handleDelete} className="btn btn-danger">
+                Delete Selected Images
+              </button>
+            )}
           </div>
+        </h5>
+
+        <div className="custom-grid">
+          {images.map((image, index) => (
+            <div
+              className={`custom-item ${index === 0 ? 'first-item' : ''}`}
+              key={image.id}
+              draggable
+              onDragStart={(e) => handleDragStart(e, image)}
+              onDragOver={handleDragOver}
+              onDrop={(e) => handleDrop(e, image)}
+            >
+              <div className="card card-hover custom-card" onClick={(e) => handleToggle(e, image.id)}>
+                <div className="position-relative">
+                  <input
+                    className="form-check-input position-absolute top-0 start-0 m-3"
+                    type="checkbox"
+                    id={`inlineCheckbox${image.id}`}
+                    name={image.id}
+                    checked={checkboxValues[image.id]}
+                    onChange={(event) => handleToggle(event, image.id)}
+                    onClick={(event) => event.stopPropagation()}
+                  />
+                </div>
+                <img
+                  src={process.env.PUBLIC_URL + `/images/${image.image}`}
+                  alt={image.name}
+                  className="card-img-top"
+                />
+              </div>
+            </div>
+          ))}
         </div>
-      ))}
+      </div>
     </div>
-  </div>
-  
   );
+
 }
 
 export default App;
