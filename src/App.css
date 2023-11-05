@@ -1,3 +1,8 @@
+.fullBody {
+  margin-top: 30px;
+}
+
+
 /* Default grid layout for screens wider than 768px */
 .custom-grid {
   display: grid;
@@ -5,6 +10,8 @@
   /* Default: 5 columns */
   grid-template-rows: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 16px;
+  margin: 27px;
+
 }
 
 /* Grid layout for screens up to 768px (4 columns) */
@@ -14,12 +21,24 @@
   }
 }
 
-/* Grid layout for screens up to 576px (3 columns) */
+
 @media (max-width: 576px) {
   .custom-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .custom-item {
+    height: auto;
+    /* Set the height to 'auto' for mobile */
+  }
+
+  .first-item {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
   }
 }
+
+
 
 .custom-item {
   /* Add any additional styling for grid items here */
@@ -39,11 +58,6 @@
 }
 
 
-
-
-
-
-
 .card-item {
   position: relative;
   overflow: hidden;
@@ -61,42 +75,32 @@
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
   border-radius: 5px;
-  opacity: 0; 
+  opacity: 0;
   transition: opacity 0.3s ease;
   cursor: pointer;
 }
 
 .card-item:hover .overlay {
-  opacity: 1; 
+  opacity: 1;
 }
 
-.form-check-input{
+.form-check-input {
   z-index: 10;
 }
 
-.text-danger{
+.text-danger {
   cursor: pointer;
 }
 
 
 
-
-
-
-
-
-
-
-
-
-/* styles.css or your custom CSS file */
 .custom-card-container {
   border: 2px dashed black;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 250px;
+  height: 228px;
 }
 
 .custom-card-content {
@@ -112,4 +116,26 @@
   align-items: center;
   height: 100vh;
   /* Adjust this as needed to center vertically */
+}
+
+
+
+
+.custom-item.dragged {
+  opacity: 0.7;
+}
+
+.custom-item.target {
+  border: 2px dashed blue;
+  transform: scale(1.05);
+}
+
+
+figure {
+  margin: 0 0 0rem !important;
+}
+
+.delete-files:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }

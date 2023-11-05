@@ -47,15 +47,27 @@ function App() {
     setCheckboxValues(updatedCheckboxValues);
   };
 
+  const [targetImage, setTargetImage] = useState(null);
+
+
+
 
   const handleDragStart = (event, image) => {
     event.dataTransfer.setData('text/plain', image.id);
     setDraggedImage(image);
   };
 
-  const handleDragOver = (event) => {
+  const handleDragOver = (event, targetImage) => {
     event.preventDefault();
+    // Find the targetImage based on the event data
+    const targetImageId = event.dataTransfer.getData('text/plain');
+    const foundImage = images.find((image) => image.id === targetImageId);
+
+    if (foundImage) {
+      setTargetImage(foundImage);
+    }
   };
+
 
   const handleDrop = (event, targetImage) => {
     event.preventDefault();
@@ -73,6 +85,7 @@ function App() {
 
     setImages(updatedImages);
     setDraggedImage(null);
+    setTargetImage(null);
   };
 
 
@@ -102,103 +115,113 @@ function App() {
   };
 
   return (
-    <div className="container">
-      <div className="card">
-        <h5 className="card-header">
-          <div className="d-flex justify-content-between align-items-center">
-            {selectedImages.length > 0 ? (
-              <div>
-                <input
-                  className="form-check-input"
-                  type="checkbox"
-                  value=""
-                  id="flexCheckChecked"
-                  checked
-                />
-                {selectedImages.length} Files Selected
-              </div>
-            ) : (
-
-              <h6 > Gallery</h6>
-            )}
-            {selectedImages.length > 0 && (
-
-
-              <h6 className="text-danger" onClick={handleDelete}> Delete files</h6>
-            )}
-          </div>
-        </h5>
-        {isLoading ? (
-          <div className="loading-icon">
-            <FontAwesomeIcon icon={faSpinner} spin size="3x" />
-
-          </div>
-        ) : (
-
-          <div className="container">
-
-          <div className="custom-grid">
-
-
-            {images.map((image, index) => (
-              <div
-                className={`custom-item  ${index === 0 ? 'first-item' : ''}`}
-                key={image.id}
-                draggable
-                onDragStart={(e) => handleDragStart(e, image)}
-                onDragOver={handleDragOver}
-                onDrop={(e) => handleDrop(e, image)}>
-
-                <div className="card"
-                  onClick={(e) => handleToggle(e, image.id)}
-                  style={{
-                    opacity: checkboxValues[image.id] ? 0.5 : 1,
-                  }}>
-                  <div className='card-item'>
-                    <div className="">
-                      <input
-                        className="form-check-input position-absolute top-0 start-0 m-3"
-                        type="checkbox"
-                        id={`inlineCheckbox${image.id}`}
-                        name={image.id}
-                        checked={checkboxValues[image.id]}
-                        onChange={(event) => handleToggle(event, image.id)}
-                        onClick={(event) => event.stopPropagation()}
-                      />
-                    </div>
-                    <figure className='image-container'>
-                      <img
-                        className="card-img-top"
-                        src={process.env.PUBLIC_URL + `/images/${image.image}`}
-                        alt={image.name}
-                      />
-                      <div className="overlay">
-                      </div>
-                    </figure>
-                  </div>
+    <div className="fullBody">
+      <div className="container">
+        <div className="card">
+          <h5 className="card-header">
+            <div className="d-flex justify-content-between align-items-center">
+              {selectedImages.length > 0 ? (
+                <div>
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    value=""
+                    id="flexCheckChecked"
+                    checked
+                  />
+                  {selectedImages.length} Files Selected
                 </div>
-              </div>
-            ))}
+              ) : (
 
-            <div className="custom-item">
-              <figure className="custom-card-container">
-                <div className="custom-card hover12 custom-card-content">
-                  <FontAwesomeIcon icon={faImage} />
-                  <p>Add Images</p>
-                </div>
-              </figure>
+                <h4 > Gallery</h4>
+              )}
+{selectedImages.length > 0 && (
+  <div>
+    <h6 className="text-danger delete-files" onClick={handleDelete}> Delete files</h6>
+  </div>
+)}
+
             </div>
+          </h5>
+          {isLoading ? (
+            <div className="loading-icon">
+              <FontAwesomeIcon icon={faSpinner} spin size="3x" />
+
+            </div>
+          ) : (
+
+            <div className="container">
+
+              <div className="custom-grid">
+
+
+                {images.map((image, index) => (
+                  <div
+                    className={`custom-item  ${index === 0 ? 'first-item' : ''} 
+               ${draggedImage === image ? 'dragged' : ''}
+               ${targetImage === image ? 'target' : ''}`}
+                    key={image.id}
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, image)}
+                    onDragOver={handleDragOver}
+                    onDrop={(e) => handleDrop(e, image)}
+                    style={{
+                      transform: draggedImage === image ? 'translate(5px, 5px)' : 'none',
+                      transition: 'transform 0.3s ease',
+                    }}
+                  >
+
+                    <div className="card"
+                      onClick={(e) => handleToggle(e, image.id)}
+                      style={{
+                        opacity: checkboxValues[image.id] ? 0.5 : 1,
+                      }}>
+                      <div className='card-item'>
+                        <div className="">
+                          <input
+                            className="form-check-input position-absolute top-0 start-0 m-3"
+                            type="checkbox"
+                            id={`inlineCheckbox${image.id}`}
+                            name={image.id}
+                            checked={checkboxValues[image.id]}
+                            onChange={(event) => handleToggle(event, image.id)}
+                            onClick={(event) => event.stopPropagation()}
+                          />
+                        </div>
+                        <figure className='image-container'>
+                          <img
+                            className="card-img-top"
+                            src={process.env.PUBLIC_URL + `/images/${image.image}`}
+                            alt={image.name}
+                          />
+                          <div className="overlay">
+                          </div>
+                        </figure>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                <div className="custom-item">
+                  <figure className="custom-card-container">
+                    <div className="custom-card hover12 custom-card-content">
+                      <FontAwesomeIcon icon={faImage} />
+                      <p>Add Images</p>
+                    </div>
+                  </figure>
+                </div>
 
 
 
 
 
 
-          </div>
-          </div>
-        )}
+              </div>
+            </div>
+          )}
 
 
+        </div>
       </div>
     </div>
   );
