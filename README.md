@@ -8,10 +8,11 @@
 
 
 ## Technology Used:
+- React
 - HTML
 - CSS
 - BOOTSTRAP
 - JAVASCRIPT
-- React
+
 
 
