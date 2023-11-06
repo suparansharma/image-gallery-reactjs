@@ -2,7 +2,6 @@
   margin-top: 30px;
 }
 
-
 /* Default grid layout for screens wider than 768px */
 .custom-grid {
   display: grid;
@@ -11,7 +10,6 @@
   grid-template-rows: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 16px;
   margin: 27px;
-
 }
 
 /* Grid layout for screens up to 768px (4 columns) */
@@ -20,7 +18,6 @@
     grid-template-columns: repeat(4, 1fr);
   }
 }
-
 
 @media (max-width: 576px) {
   .custom-grid {
@@ -38,8 +35,6 @@
   }
 }
 
-
-
 .custom-item {
   /* Add any additional styling for grid items here */
 }
@@ -53,10 +48,9 @@
   opacity: 100;
   height: 100%;
   width: 100%;
-  -webkit-transition: .3s ease-in-out;
-  transition: .3s ease-in-out;
+  -webkit-transition: 0.3s ease-in-out;
+  transition: 0.3s ease-in-out;
 }
-
 
 .card-item {
   position: relative;
@@ -92,8 +86,6 @@
   cursor: pointer;
 }
 
-
-
 .custom-card-container {
   border: 2px dashed black;
   display: flex;
@@ -109,7 +101,6 @@
   align-items: center;
 }
 
-
 .loading-icon {
   display: flex;
   justify-content: center;
@@ -117,9 +108,6 @@
   height: 100vh;
   /* Adjust this as needed to center vertically */
 }
-
-
-
 
 .custom-item.dragged {
   opacity: 0.7;
@@ -130,7 +118,6 @@
   transform: scale(1.05);
 }
 
-
 figure {
   margin: 0 0 0rem !important;
 }
@@ -140,16 +127,8 @@ figure {
   cursor: pointer;
 }
 
-
 body {
-  background-color:#d7d7d77a !important;
+  background-color: #d7d7d77a !important;
 }
 
 /* App.css */
-
-
-
-
-
-
-

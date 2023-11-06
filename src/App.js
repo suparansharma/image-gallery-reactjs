@@ -156,7 +156,7 @@ function App() {
               <div className="custom-grid">
 
 
-              {images.map((image, index) => (
+                {images.map((image, index) => (
                   <ImageCard
                     key={image.id}
                     image={image}
