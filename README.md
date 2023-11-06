@@ -1,4 +1,4 @@
-## Live Site [https://suparansharma.github.io/Air_Ticket_Using_Html_Css_JavaScript/](https://effortless-moxie-1fa8d5.netlify.app/)
+## Live Site [Image Gallery](https://effortless-moxie-1fa8d5.netlify.app/)
 
 ## Features
 
